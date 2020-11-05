@@ -190,8 +190,8 @@ ChiakiControllerState Controller::GetState()
 	if(!controller)
 		return state;
 
-	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A) ? CHIAKI_CONTROLLER_BUTTON_CROSS : 0;
-	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B) ? CHIAKI_CONTROLLER_BUTTON_MOON : 0;
+	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A) ? CHIAKI_CONTROLLER_BUTTON_MOON : 0;
+	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B) ? CHIAKI_CONTROLLER_BUTTON_CROSS : 0;
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X) ? CHIAKI_CONTROLLER_BUTTON_BOX : 0;
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y) ? CHIAKI_CONTROLLER_BUTTON_PYRAMID : 0;
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) ? CHIAKI_CONTROLLER_BUTTON_DPAD_LEFT : 0;
@@ -202,8 +202,44 @@ ChiakiControllerState Controller::GetState()
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) ? CHIAKI_CONTROLLER_BUTTON_R1 : 0;
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_LEFTSTICK) ? CHIAKI_CONTROLLER_BUTTON_L3 : 0;
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK) ? CHIAKI_CONTROLLER_BUTTON_R3 : 0;
-	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START) ? CHIAKI_CONTROLLER_BUTTON_OPTIONS : 0;
-	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_BACK) ? CHIAKI_CONTROLLER_BUTTON_SHARE : 0;
+	
+	//state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START) ? CHIAKI_CONTROLLER_BUTTON_OPTIONS : 0;
+	//state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_BACK) ? CHIAKI_CONTROLLER_BUTTON_SHARE : 0;
+
+	auto start_pressed = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START);
+	if (start_pressed) {
+		state.buttons |= CHIAKI_CONTROLLER_BUTTON_OPTIONS;
+	}
+	auto back_pressed = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_BACK);
+	if (back_pressed) {
+		state.buttons |= CHIAKI_CONTROLLER_BUTTON_TOUCHPAD;
+		state.touches[0].id = 2;
+		state.touches[0].x = 0x0101;
+		state.touches[0].y = 0x0101;
+	}
+	if (back_pressed && start_pressed) {
+		state.buttons |= CHIAKI_CONTROLLER_BUTTON_SHARE;
+	}
+
+	//static bool back_button_last_state = false;
+	//bool back_button_current_state = (bool)SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_BACK);
+	//if (back_button_last_state != back_button_current_state) {
+	//	if (back_button_current_state) {
+	//		// pressed back
+	//	} else {
+	//		// released back
+	//	}
+	//	state.buttons |= CHIAKI_CONTROLLER_BUTTON_TOUCHPAD;
+	//
+	//}
+	//state.touches[0].id = 0;
+	//state.touches[0].x = 200;
+	//state.touches[0].y = 200;
+
+
+
+
+
 	state.buttons |= SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_GUIDE) ? CHIAKI_CONTROLLER_BUTTON_PS : 0;
 	state.l2_state = (uint8_t)(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) >> 7);
 	state.r2_state = (uint8_t)(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) >> 7);
