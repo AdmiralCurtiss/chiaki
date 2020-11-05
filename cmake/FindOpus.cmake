@@ -5,9 +5,14 @@
 find_path(Opus_INCLUDE_DIRS
 	NAMES opus/opus.h
 	PATH_SUFFIXES include
+	HINTS ${Opus_DIR}
 )
 
-find_library(Opus_LIBRARIES NAMES opus)
+find_library(Opus_LIBRARIES
+	NAMES opus
+	PATH_SUFFIXES lib
+	HINTS ${Opus_DIR}
+)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Opus
